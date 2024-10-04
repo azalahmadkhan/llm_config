@@ -1,0 +1,190 @@
+# dask-config.yaml
+
+# Scheduler settings
+scheduler:
+  idle-timeout: 3600s
+  bandwidth: 100000000
+  allowed-failures: 3
+  work-stealing: true
+  transition-log-length: 10000
+  heartbeat-interval: 5000ms
+  prefetch: true
+  worker-saturation: 0.8
+
+# Worker settings
+worker:
+  memory:
+    target: 0.6  # Target fraction of memory to be used
+    spill: 0.7  # Spill to disk threshold
+    pause: 0.8  # Pause threshold
+    terminate: 0.9  # Termination threshold
+  threads: 4
+  nthreads: 4
+  lifetime: 10000s
+  lifetime-stagger: 0.01
+  lifetime-restart: true
+  resources:
+    gpu: 1
+    cpu: 4
+  preload: []
+  preload-argv: []
+  reconnect: true
+  heartbeat-interval: 10000ms
+  profile-interval: 10ms
+  death-timeout: 60
+  multiprocessing-method: fork
+
+# Distributed system settings
+distributed:
+  comm:
+    compression: auto
+    heartbeat-interval: 10000ms
+    default-scheme: tcp
+    timeout:
+      connect: 5s
+      tcp: 10s
+  worker:
+    daemon: true
+    profile:
+      cycle: 1s
+      interval: 1ms
+    memory:
+      target: 0.6
+      spill: 0.7
+      pause: 0.8
+      terminate: 0.9
+  adaptive:
+    target-duration: 5s
+    interval: 5s
+    maximum: 100
+    minimum: 1
+
+# Admin and diagnostics
+admin:
+  log-format: '%(asctime)s - %(message)s'
+  event-loop: tornado
+  pdb-on-err: false
+  log-level: debug
+  tick-interval: 500ms
+
+# Task configuration
+task:
+  annotations: false
+  retries: 3
+  state-memory-limit: 10000000
+
+# Dashboard settings
+dashboard:
+  link: "{host}:{port}/status"
+  export-tool:
+    directory: /var/log/dask/export
+    port: 8787
+  periodic-interval: 2000ms
+
+# Security settings
+security:
+  require-encryption: true
+  tls:
+    ca-file: /path/to/ca.pem
+    client-cert: /path/to/client-cert.pem
+    client-key: /path/to/client-key.pem
+    scheduler-cert: /path/to/scheduler-cert.pem
+    scheduler-key: /path/to/scheduler-key.pem
+  extra-protocols: ['tcp', 'tls']
+
+# Environment and plugin settings
+environment:
+  variables:
+    OMP_NUM_THREADS: 4
+    MKL_NUM_THREADS: 4
+    OPENBLAS_NUM_THREADS: 4
+
+# Client settings
+client:
+  asynchronous: false
+  set-as-default: true
+  timeout: 5s
+
+# Serialization settings
+serialization:
+  pickle-protocol: 4
+  optimize-heap-alloc: true
+  deserialization-buffer-size: 1GB
+
+# Memory limits and resource allocation
+resources:
+  limits:
+    memory: 64GB
+    nprocs: 8
+    threads: 16
+  priorities:
+    - cpu
+    - memory
+    - network
+  profiles:
+    small:
+      memory: 16GB
+      nthreads: 4
+    large:
+      memory: 128GB
+      nthreads: 16
+
+# Logging settings
+logging:
+  distributed: info
+  dask: debug
+  bokeh: info
+
+# Adaptive scaling settings
+adaptive:
+  interval: 1000ms
+  minimum: 2
+  maximum: 100000
+  wait-count: 10
+
+# Dataframe settings
+dataframe:
+  shuffle-compression: lz4
+  blocksize: 128MB
+  shuffle: tasks
+
+# Array settings
+array:
+  chunk-size: 128MB
+  rechunk-threshold: 4GB
+  max-memory: 80%
+  divide-large-arrays: false
+
+# Temporary directory settings
+temporary-directory: /tmp/dask-temp
+
+# Nanny settings
+nanny:
+  memory-limit: 64GB
+  environment: {}
+
+# Custom hooks
+hooks:
+  task-complete: custom_complete_hook
+  scheduler-start: scheduler_start_hook
+
+# Retry settings
+retry:
+  initial-delay: 1s
+  max-delay: 10s
+  backoff-factor: 2
+
+# Cache settings
+cache:
+  size-limit: 10GB
+  eviction-policy: least-recently-used
+
+# Performance settings
+performance:
+  slow-task-threshold: 2s
+  optimize-scheduler: true
+
+# Debug settings
+debug:
+  profiler: true
+  visualizer: true
